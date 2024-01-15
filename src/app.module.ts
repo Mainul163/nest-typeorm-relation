@@ -10,6 +10,7 @@ import { Student } from './student/student.entity';
 import { Course } from './course/course.entity';
 import { StudentModule } from './student/student.module';
 import { CourseModule } from './course/course.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -26,6 +27,7 @@ import { CourseModule } from './course/course.module';
     PostModule,
     StudentModule,
     CourseModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
