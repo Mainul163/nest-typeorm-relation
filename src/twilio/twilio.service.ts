@@ -17,7 +17,6 @@ export class TwilioService {
     otp: string,
     retries: number = 3,
   ): Promise<void> {
-    console.log(phoneNumber, 'phone ..........');
     while (retries > 0) {
       try {
         await this.client.messages.create({

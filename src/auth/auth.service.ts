@@ -8,6 +8,7 @@ export class AuthService {
   async sendOTP(phoneNumber: string): Promise<void> {
     const otp = this.generateOTP();
     // Store the OTP in a database or cache for verification
+    console.log(phoneNumber, otp, 'result');
     await this.twilioService.sendOTP(phoneNumber, otp);
   }
 
