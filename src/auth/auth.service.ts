@@ -1,15 +1,24 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { TwilioService } from '../twilio/twilio.service';
-
+import { PhoneOtp } from './auth.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
 export class AuthService {
-  constructor(private readonly twilioService: TwilioService) {}
+  constructor(
+    @InjectRepository(PhoneOtp)
+    private readonly PhoneRepository: Repository<PhoneOtp>,
+    private readonly twilioService: TwilioService,
+  ) {}
 
-  async sendOTP(phoneNumber: string): Promise<void> {
+  async sendOTP(phoneNumber: string): Promise<PhoneOtp> {
     const otp = this.generateOTP();
     // Store the OTP in a database or cache for verification
-    console.log(phoneNumber, otp, 'result');
-    await this.twilioService.sendOTP(phoneNumber, otp);
+    const array = { phone: phoneNumber, otp: otp };
+    console.log(phoneNumber, otp, array, 'result');
+
+    this.twilioService.sendOTP(phoneNumber, otp);
+    return await this.PhoneRepository.save(array);
   }
 
   async verifyOTP(

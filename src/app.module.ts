@@ -11,6 +11,7 @@ import { Course } from './course/course.entity';
 import { StudentModule } from './student/student.module';
 import { CourseModule } from './course/course.module';
 import { AuthModule } from './auth/auth.module';
+import { PhoneOtp } from './auth/auth.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -20,7 +21,7 @@ import { AuthModule } from './auth/auth.module';
       username: 'root',
       password: 'admin123@123',
       database: 'nest_database',
-      entities: [User, Post, Student, Course],
+      entities: [User, Post, Student, Course, PhoneOtp],
       synchronize: true,
     }),
     UserModule,
