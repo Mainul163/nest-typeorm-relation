@@ -7,7 +7,7 @@ export class TwilioService {
 
   constructor() {
     const TWILIO_SID = 'AC1204c111277035f7fdf14a3da7c01da0';
-    const TWILIO_AUTH_TOKEN = 'd88f67bc9c84942cb982dff1f89095aa';
+    const TWILIO_AUTH_TOKEN = '8e6b3f59bd1682749d4714a925acbb3c';
 
     this.client = Twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
   }

@@ -12,9 +12,7 @@ export class AuthController {
   }
 
   @Post('/verify-otp')
-  verifyOTP(
-    @Body() data: AuthCredentialsDto,
-  ): Promise<{ accessToken: string }> {
+  verifyOTP(@Body() data: AuthCredentialsDto) {
     return this.authService.verifyOTP(data.phoneNumber, data.otp);
   }
 }

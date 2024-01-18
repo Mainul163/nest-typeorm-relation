@@ -3,35 +3,46 @@ import { TwilioService } from '../twilio/twilio.service';
 import { PhoneOtp } from './auth.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(PhoneOtp)
     private readonly PhoneRepository: Repository<PhoneOtp>,
     private readonly twilioService: TwilioService,
+    private jwtService: JwtService,
   ) {}
 
   async sendOTP(phoneNumber: string): Promise<PhoneOtp> {
     const otp = this.generateOTP();
     // Store the OTP in a database or cache for verification
-    const array = { phone: phoneNumber, otp: otp };
-    console.log(phoneNumber, otp, array, 'result');
+    const phoneOtp = { phoneNumber: phoneNumber, otp: otp };
 
     this.twilioService.sendOTP(phoneNumber, otp);
-    return await this.PhoneRepository.save(array);
+    return await this.PhoneRepository.save(phoneOtp);
   }
 
-  async verifyOTP(
-    phoneNumber: string,
-    otp: string,
-  ): Promise<{ accessToken: string }> {
+  async verifyOTP(phoneNumber: string, otp: string) {
+    const otpNumber = await this.PhoneRepository.findOne({
+      where: { otp },
+    });
+
+    if (otpNumber?.otp !== otp) {
+      console.log(otpNumber?.otp, 'otp', otp);
+      throw new UnauthorizedException();
+    }
+    const payload = { sub: otpNumber.id, phoneNumber: otpNumber.phoneNumber };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
     // Retrieve stored OTP from the database or cache
     const storedOTP = 'getStoredOTP'; // Replace with your actual implementation
 
     if (otp === storedOTP) {
       // OTP is valid, generate and return an access token
-      const accessToken = 'generateAccessToken'; // Replace with your actual implementation
-      return { accessToken };
+      // const accessToken = 'generateAccessToken'; Replace with your actual implementation
+      // return {accessToken};
+      // return;
     } else {
       throw new UnauthorizedException('Invalid OTP');
     }
