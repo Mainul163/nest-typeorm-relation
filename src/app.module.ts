@@ -12,6 +12,9 @@ import { StudentModule } from './student/student.module';
 import { CourseModule } from './course/course.module';
 import { AuthModule } from './auth/auth.module';
 import { PhoneOtp } from './auth/auth.entity';
+import { File } from './file/file.entity';
+import { FileModule } from './file/file.module';
+import { MulterModule } from '@nestjs/platform-express';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -21,14 +24,18 @@ import { PhoneOtp } from './auth/auth.entity';
       username: 'root',
       password: 'admin123@123',
       database: 'nest_database',
-      entities: [User, Post, Student, Course, PhoneOtp],
+      entities: [User, Post, Student, Course, PhoneOtp, File],
       synchronize: true,
+    }),
+    MulterModule.register({
+      dest: './uploads', // Set the destination folder for file uploads
     }),
     UserModule,
     PostModule,
     StudentModule,
     CourseModule,
     AuthModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
